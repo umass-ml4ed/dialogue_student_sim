@@ -290,59 +290,59 @@ class DPODataset(DatasetBase):
 def dpo(args):
     datasets.logging.set_verbosity_error() # Disable hashing warning from calling .map in DPOTrainer
 
-    # # Load or generate overgenerated data
-    # train_data, val_data = overgen_dpo_data(args)
+    # Load or generate overgenerated data
+    train_data, val_data = overgen_dpo_data(args)
 
-    # # Load model
-    # base_model, tokenizer = get_base_model(args["base_model"], args["quantize"])
-    # model = get_model(base_model, False, pt_model_name=args["pt_model_name"], r=args["r"], lora_alpha=args["lora_alpha"], quantize=args["quantize"])
-    # if not args["pt_model_name"]:
-    #     print("Using base model as reference model")
+    # Load model
+    base_model, tokenizer = get_base_model(args["base_model"], args["quantize"])
+    model = get_model(base_model, False, pt_model_name=args["pt_model_name"], r=args["r"], lora_alpha=args["lora_alpha"], quantize=args["quantize"])
+    if not args["pt_model_name"]:
+        print("Using base model as reference model")
 
-    # # Train
-    # train_dataset = DPODataset(train_data, tokenizer, args)
-    # val_dataset = DPODataset(val_data, tokenizer, args)
+    # Train
+    train_dataset = DPODataset(train_data, tokenizer, args)
+    val_dataset = DPODataset(val_data, tokenizer, args)
 
-    # config = DPOConfig(
-    #     output_dir=get_checkpoint_path(args["model_name"]),
-    #     num_train_epochs=args["epochs"],
-    #     learning_rate=args["lr"],
-    #     weight_decay=args["wd"],
-    #     max_grad_norm=args["gc"],
-    #     warmup_ratio=0.1,
-    #     gradient_accumulation_steps=args["grad_accum_steps"],
-    #     per_device_train_batch_size=args["train_batch_size"],
-    #     per_device_eval_batch_size=args["val_batch_size"],
-    #     eval_strategy="epoch",
-    #     save_strategy="epoch",
-    #     save_total_limit=1,
-    #     save_only_model=True,
-    #     load_best_model_at_end=True,
-    #     # report_to="wandb" if args["wandb"] else "none",
-    #     report_to="none",
-    #     # DPO-specific arguments
-    #     # model_adapter_name="default",
-    #     # ref_adapter_name="lora_ref" if args["pt_model_name"] else None,
-    #     # generate_during_eval=False,
-    #     precompute_ref_log_probs=True,
-    #     precompute_ref_batch_size=args["val_batch_size"],
-    #     beta=args["beta"]
-    # )
-    # trainer = DPOTrainer(
-    #     model=model,
-    #     args=config,
-    #     train_dataset=HFDataset.from_list(train_dataset.data),
-    #     eval_dataset=HFDataset.from_list(val_dataset.data),
-    #     processing_class=tokenizer
-    # )
+    config = DPOConfig(
+        output_dir=get_checkpoint_path(args["model_name"]),
+        num_train_epochs=args["epochs"],
+        learning_rate=args["lr"],
+        weight_decay=args["wd"],
+        max_grad_norm=args["gc"],
+        warmup_ratio=0.1,
+        gradient_accumulation_steps=args["grad_accum_steps"],
+        per_device_train_batch_size=args["train_batch_size"],
+        per_device_eval_batch_size=args["val_batch_size"],
+        eval_strategy="epoch",
+        save_strategy="epoch",
+        save_total_limit=1,
+        save_only_model=True,
+        load_best_model_at_end=True,
+        # report_to="wandb" if args["wandb"] else "none",
+        report_to="none",
+        # DPO-specific arguments
+        # model_adapter_name="default",
+        # ref_adapter_name="lora_ref" if args["pt_model_name"] else None,
+        # generate_during_eval=False,
+        precompute_ref_log_probs=True,
+        precompute_ref_batch_size=args["val_batch_size"],
+        beta=args["beta"]
+    )
+    trainer = DPOTrainer(
+        model=model,
+        args=config,
+        train_dataset=HFDataset.from_list(train_dataset.data),
+        eval_dataset=HFDataset.from_list(val_dataset.data),
+        processing_class=tokenizer
+    )
 
-    # set_trace()
-    # trainer.train()
-    # trainer.save_model()
+    set_trace()
+    trainer.train()
+    trainer.save_model()
 
-    # # Free up memory
-    # del trainer, base_model, model
-    # run_gc()
+    # Free up memory
+    del trainer, base_model, model
+    run_gc()
 
     # Test
     test({
