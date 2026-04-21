@@ -17,6 +17,8 @@ from sim_student.testing import test, TestingDataset
 from sim_student.eval import eval_similarity_text, eval_similarity_acts, eval_knowledge_state, eval_similarity_correctness_and_errors, eval_tutor_ppl
 from sim_student.utils import get_checkpoint_path, run_gc, initialize_seeds
 
+from pdb import set_trace
+
 def get_overgen_descriptor(args: dict):
     role = "" if args["role"] == "student" else "tutor_"
     desc = f"{role}{args['base_model']}_{args['pt_model_name']}_temp{args['temperature']}_ns{args['num_samples']}"
@@ -39,6 +41,7 @@ def unroll_data(data: List[Dialogue]):
                     "gt_turn": turn["content"],
                     "pred_turn": cand
                 })
+
     return unrolled
 
 def apply_scores(data: List[Dialogue], unrolled_data: List[dict], scores: List[float]):
@@ -85,14 +88,15 @@ def generate_candidate_turns(data: List[Dialogue], args: dict):
     run_gc()
 
 ROLE_TO_REWARDS = {
-    "student": {"cos", "acts", "kt", "corr", "err", "tut"}
+    # "student": {"cos", "acts", "kt", "corr", "err", "tut"}
+    "student": {"acts", "corr", "err"}
 }
 
 REWARD_TO_FN = {
     "acts": score_acts_sim,
-    "kt": score_kt,
-    "tut": score_tutor_ppl,
-    "cos": score_cos_sim
+    # "kt": score_kt,
+    # "tut": score_tutor_ppl,
+    # "cos": score_cos_sim
 }
 
 def get_reward_cols(args: dict):
@@ -135,6 +139,7 @@ def overgen_dpo_data(args: dict):
         if any([col in reward_cols and col not in data[0] for col in ["reward_corr", "reward_err"]]):
             # Correctness and errors computed together so only do once
             correctness_and_error_scores = score_correctness_and_error_sim(unrolled_data)
+  
         for reward, col in zip(args["rewards"], reward_cols):
             if col in data[0]:
                 print(f"Reward {col} already scored for {args['dataset']} {split}, skipping scoring")
@@ -285,56 +290,59 @@ class DPODataset(DatasetBase):
 def dpo(args):
     datasets.logging.set_verbosity_error() # Disable hashing warning from calling .map in DPOTrainer
 
-    # Load or generate overgenerated data
-    train_data, val_data = overgen_dpo_data(args)
+    # # Load or generate overgenerated data
+    # train_data, val_data = overgen_dpo_data(args)
 
-    # Load model
-    base_model, tokenizer = get_base_model(args["base_model"], args["quantize"])
-    model = get_model(base_model, False, pt_model_name=args["pt_model_name"], r=args["r"], lora_alpha=args["lora_alpha"], quantize=args["quantize"])
-    if not args["pt_model_name"]:
-        print("Using base model as reference model")
+    # # Load model
+    # base_model, tokenizer = get_base_model(args["base_model"], args["quantize"])
+    # model = get_model(base_model, False, pt_model_name=args["pt_model_name"], r=args["r"], lora_alpha=args["lora_alpha"], quantize=args["quantize"])
+    # if not args["pt_model_name"]:
+    #     print("Using base model as reference model")
 
-    # Train
-    train_dataset = DPODataset(train_data, tokenizer, args)
-    val_dataset = DPODataset(val_data, tokenizer, args)
-    config = DPOConfig(
-        output_dir=get_checkpoint_path(args["model_name"]),
-        num_train_epochs=args["epochs"],
-        learning_rate=args["lr"],
-        weight_decay=args["wd"],
-        max_grad_norm=args["gc"],
-        warmup_ratio=0.1,
-        gradient_accumulation_steps=args["grad_accum_steps"],
-        per_device_train_batch_size=args["train_batch_size"],
-        per_device_eval_batch_size=args["val_batch_size"],
-        eval_strategy="epoch",
-        save_strategy="epoch",
-        save_total_limit=1,
-        save_only_model=True,
-        load_best_model_at_end=True,
-        # report_to="wandb" if args["wandb"] else "none",
-        report_to="none",
-        # DPO-specific arguments
-        model_adapter_name="default",
-        ref_adapter_name="lora_ref" if args["pt_model_name"] else None,
-        generate_during_eval=False,
-        precompute_ref_log_probs=True,
-        precompute_ref_batch_size=args["val_batch_size"],
-        beta=args["beta"]
-    )
-    trainer = DPOTrainer(
-        model=model,
-        args=config,
-        train_dataset=HFDataset.from_list(train_dataset.data),
-        eval_dataset=HFDataset.from_list(val_dataset.data),
-        processing_class=tokenizer
-    )
-    trainer.train()
-    trainer.save_model()
+    # # Train
+    # train_dataset = DPODataset(train_data, tokenizer, args)
+    # val_dataset = DPODataset(val_data, tokenizer, args)
 
-    # Free up memory
-    del trainer, base_model, model
-    run_gc()
+    # config = DPOConfig(
+    #     output_dir=get_checkpoint_path(args["model_name"]),
+    #     num_train_epochs=args["epochs"],
+    #     learning_rate=args["lr"],
+    #     weight_decay=args["wd"],
+    #     max_grad_norm=args["gc"],
+    #     warmup_ratio=0.1,
+    #     gradient_accumulation_steps=args["grad_accum_steps"],
+    #     per_device_train_batch_size=args["train_batch_size"],
+    #     per_device_eval_batch_size=args["val_batch_size"],
+    #     eval_strategy="epoch",
+    #     save_strategy="epoch",
+    #     save_total_limit=1,
+    #     save_only_model=True,
+    #     load_best_model_at_end=True,
+    #     # report_to="wandb" if args["wandb"] else "none",
+    #     report_to="none",
+    #     # DPO-specific arguments
+    #     # model_adapter_name="default",
+    #     # ref_adapter_name="lora_ref" if args["pt_model_name"] else None,
+    #     # generate_during_eval=False,
+    #     precompute_ref_log_probs=True,
+    #     precompute_ref_batch_size=args["val_batch_size"],
+    #     beta=args["beta"]
+    # )
+    # trainer = DPOTrainer(
+    #     model=model,
+    #     args=config,
+    #     train_dataset=HFDataset.from_list(train_dataset.data),
+    #     eval_dataset=HFDataset.from_list(val_dataset.data),
+    #     processing_class=tokenizer
+    # )
+
+    # set_trace()
+    # trainer.train()
+    # trainer.save_model()
+
+    # # Free up memory
+    # del trainer, base_model, model
+    # run_gc()
 
     # Test
     test({
@@ -351,18 +359,19 @@ def main():
     parser.add_argument("--dataset", default="eedi")
     parser.add_argument("--role", choices=["student", "tutor"], default="student")
     parser.add_argument("--subsample", type=float, default=0.2, help="Subsample dataset (0 for no subsampling), take from beginning of shuffle")
-    parser.add_argument("--exclude_first_turns", type=int, default=5, help="Exclude first n turns of each dialogue")
+    parser.add_argument("--exclude_first_turns", type=int, default=3, help="Exclude first n turns of each dialogue")
     parser.add_argument("--test_on", choices=["val", "test"], default="val", help="Set to test on after training")
     parser.add_argument("--test_subsample", type=float, help="Subsample from test set")
     # Settings
     parser.add_argument("--persona", choices=["none", "ocean", "freeform"], default="none")
-    parser.add_argument("--rewards", default="cos,acts,kt,corr,err,tut", help="Comma-separated reward types for training")
+    parser.add_argument("--rewards", default="acts,corr", help="Comma-separated reward types for training")
     parser.add_argument("--rm_base_model", default="8b", help="Base model for fine-tuned reward models")
-    parser.add_argument("--llmkt_model", default="llmkt-8b-ocean", help="Model to use for KT reward")
+    # parser.add_argument("--llmkt_model", default="llmkt-8b-ocean", help="Model to use for KT reward")
     parser.add_argument("--kcs_src", choices=["eedi"], default="eedi", help="Source of KCs for KT reward")
     parser.add_argument("--acts_model", default="acts-8b", help="Model to use for dialogue acts reward")
-    parser.add_argument("--tutor_model", default="eedi-tutor-sft-8b", help="Model to use for tutor PPL reward")
+    # parser.add_argument("--tutor_model", default="eedi-tutor-sft-8b", help="Model to use for tutor PPL reward")
     parser.add_argument("--student_model", help="Model to use for student outcomes reward")
+    parser.add_argument("--input_type", choices=["none", "profile", "dialogue"], default="none")
     # Model
     parser.add_argument("--base_model", default="8b")
     parser.add_argument("--model_name")
