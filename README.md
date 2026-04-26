@@ -49,7 +49,7 @@ python -m sim_student.profile_agent --model_name profile_8b
 
 Train GRPO on Profile Agent on validation set:
 ```
-python -m sim_student.profile_grpo --pt_model_name profile_8b --model_name profile_grpo_8b --dialogue_model_name eedi-stud-dpo-8b
+python -m sim_student.profile_grpo --pt_model_name profile_8b --model_name profile_grpo_8b --dialogue_model_name eedi-stud-dpo-8b --input_type profile
 ```
 
 
