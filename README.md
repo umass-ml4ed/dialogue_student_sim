@@ -39,7 +39,7 @@ python -m sim_student.sft --model_name eedi-stud-sft-8b --input_type profile
 
 Train DPO and test/evaluate on validation set:
 ```
-python -m sim_student.dpo --pt_model_name eedi-stud-sft-8b --model_name eedi-stud-dpo-8b --input_type profile
+python -m sim_student.turn_dpo --pt_model_name eedi-stud-sft-8b --model_name eedi-stud-dpo-8b --input_type profile
 ```
 
 Train SFT on Profile Agent on validation set:
