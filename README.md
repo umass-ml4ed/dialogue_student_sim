@@ -47,6 +47,11 @@ Train ORPO and test/evaluate on validation set:
 python -m sim_student.dialogue_orpo --model_name eedi-stud-orpo-8b --pt_model_name eedi-stud-sft-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold
 ```
 
+Train Conterfactual turn level DPO after ORPO and test/evaluate on validation set:
+```
+python -m sim_student.orpo_turn_dpo --model_name eedi-stud-orpo-dpo-8b --pt_model_name eedi-stud-orpo-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold
+```
+
 Train SFT on Profile Agent on validation set:
 ```
 python -m sim_student.profile_agent --model_name profile_8b
