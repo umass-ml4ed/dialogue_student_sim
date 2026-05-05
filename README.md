@@ -39,7 +39,7 @@ python -m sim_student.sft --model_name eedi-stud-sft-8b --input_type profile --k
 
 Iteratively train dialogue agent and test/evaluate on validation set:
 ```
-python -m sim_student.sft --model_name eedi-stud-sft-iter-8b --pt_model_name eedi-stud-sft-8b --input_type profile --ks_num --iterative
+python -m sim_student.sft --model_name eedi-stud-sft-iter-8b --pt_model_name eedi-stud-dpo-8b --input_type profile --ks_num --iterative
 ```
 
 Train DPO and test/evaluate on validation set:
