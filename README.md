@@ -34,22 +34,27 @@ The following trains/tests/evaluates the student models implemented in this repo
 
 Train SFT and test/evaluate on validation set:
 ```
-python -m sim_student.sft --model_name eedi-stud-sft-8b --input_type profile
+python -m sim_student.sft --model_name eedi-stud-sft-8b --input_type profile --ks_num
+```
+
+Iteratively train dialogue agent and test/evaluate on validation set:
+```
+python -m sim_student.sft --model_name eedi-stud-sft-iter-8b --pt_model_name eedi-stud-sft-8b --input_type profile --ks_num
 ```
 
 Train DPO and test/evaluate on validation set:
 ```
-python -m sim_student.turn_dpo --pt_model_name eedi-stud-sft-8b --model_name eedi-stud-dpo-8b --input_type profile
+python -m sim_student.turn_dpo --pt_model_name eedi-stud-sft-8b --model_name eedi-stud-dpo-8b --input_type profile --ks_num
 ```
 
 Train ORPO and test/evaluate on validation set:
 ```
-python -m sim_student.dialogue_orpo --model_name eedi-stud-orpo-8b --pt_model_name eedi-stud-sft-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold
+python -m sim_student.dialogue_orpo --model_name eedi-stud-orpo-8b --pt_model_name eedi-stud-sft-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold --ks_num
 ```
 
 Train Conterfactual turn level DPO after ORPO and test/evaluate on validation set:
 ```
-python -m sim_student.orpo_turn_dpo --model_name eedi-stud-orpo-dpo-8b --pt_model_name eedi-stud-orpo-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold
+python -m sim_student.orpo_turn_dpo --model_name eedi-stud-orpo-dpo-8b --pt_model_name eedi-stud-orpo-8b --input_type profile --ks_num --negative_pairing kc_ratio_threshold --ks_num
 ```
 
 Train SFT on Profile Agent on validation set:
