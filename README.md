@@ -59,12 +59,12 @@ python -m sim_student.orpo_turn_dpo --model_name eedi-stud-orpo-dpo-8b --pt_mode
 
 Train SFT on Profile Agent on validation set:
 ```
-python -m sim_student.profile_agent --model_name profile_8b
+python -m sim_student.profile_agent --model_name profile_8b --ks_num
 ```
 
 Train GRPO on Profile Agent on validation set:
 ```
-python -m sim_student.profile_grpo --pt_model_name profile_8b --model_name profile_grpo_8b --dialogue_model_name eedi-stud-dpo-8b --input_type profile
+python -m sim_student.profile_grpo --pt_model_name profile_8b --model_name profile_grpo_8b --dialogue_model_name eedi-stud-dpo-8b --input_type profile --ks_num
 ```
 
 
