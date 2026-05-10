@@ -30,6 +30,12 @@ python -m sim_student.correctness train --model_name correctness-8b
 
 The following trains/tests/evaluates the student models implemented in this repo.
 
+### Metrics
+LLMKT (Knowledge Acquisition Metric)
+```
+python -m sim_student.llmkt train --model_name llmkt-8b --input_type profile --persona none
+```
+
 ### Fine-tuning methods
 
 Train SFT and test/evaluate on validation set:
