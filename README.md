@@ -21,7 +21,17 @@ Many of our automated metrics rely on fine-tuned models that will make predictio
 python -m sim_student.acts train --model_name acts-8b
 ```
 
-### Correctness Classifier (Optional, only used for distribution analysis)
+### LLMKT (Knowledge Acquisition Metric)
+```
+python -m sim_student.llmkt train --model_name llmkt-8b --input_type profile
+```
+
+### Tutor Model (Inducing Tutor Response Metric)
+```
+python -m sim_student.sft --model_name eedi-tutor-sft-8b --role tutor
+```
+
+### Correctness Classifier
 ```
 python -m sim_student.correctness train --model_name correctness-8b
 ```
@@ -29,12 +39,6 @@ python -m sim_student.correctness train --model_name correctness-8b
 ## Student Simulation
 
 The following trains/tests/evaluates the student models implemented in this repo.
-
-### Metrics
-LLMKT (Knowledge Acquisition Metric)
-```
-python -m sim_student.llmkt train --model_name llmkt-8b --input_type profile --persona none
-```
 
 ### Fine-tuning methods
 
