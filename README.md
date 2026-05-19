@@ -82,6 +82,10 @@ Train GRPO on Profile Agent for KT on test set:
 python -m sim_student.profile_grpo_kt --pt_model_name profile_8b --model_name profile_grpo_kt_8b --kt_model_name lmkt_qa_profile --input_type profile --ks_num
 ```
 
+Test and evaluate on test set
+```
+python -m sim_student.testing --student_model eedi-stud-dpo-8b --input_type profile --ks_num
+```
 
 ### Prompting methods
 
