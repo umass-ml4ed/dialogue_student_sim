@@ -1,5 +1,21 @@
 # Simulated Student in Dialogue
 
+This code is associated with the paper <a href="https://arxiv.org/abs/2605.30051">Who Am I? History-Aware Profiles for Student Simulation in Tutoring Dialogues</a>. Currently, a slice of this data is used in an ongoing public-facing data mining challenge, which lasts until late August, we will release the data once the challenge is finished. 
+
+If you find this code useful, please cite us!
+```
+@misc{duan2026ihistoryawareprofilesstudent,
+      title={Who Am I? History-Aware Profiles for Student Simulation in Tutoring Dialogues}, 
+      author={Zhangqi Duan and Shuyan Huang and Alexander Scarlatos and Jaewook Lee and Simon Woodhead and Andrew Lan},
+      year={2026},
+      eprint={2605.30051},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2605.30051}, 
+}
+```
+
+
 ## Recreating Annotations
 
 Annotate the data using OpenAI:
