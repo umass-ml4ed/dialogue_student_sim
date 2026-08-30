@@ -1,6 +1,6 @@
 # Simulated Student in Dialogue
 
-This code is associated with the paper <a href="https://arxiv.org/abs/2605.30051">Who Am I? History-Aware Profiles for Student Simulation in Tutoring Dialogues</a>. Currently, a slice of this data is used in an ongoing public-facing data mining challenge, which lasts until late August, we will release the data once the challenge is finished. 
+This code is associated with the paper <a href="https://arxiv.org/abs/2605.30051">Who Am I? History-Aware Profiles for Student Simulation in Tutoring Dialogues</a>, which is published at EMNLP 2026. Currently, a slice of this data is used in an ongoing public-facing data mining challenge, which lasts until late August, we will release the data once the challenge is finished. 
 
 If you find this code useful, please cite us!
 ```
