@@ -30,8 +30,7 @@ class OpenAIClient:
             )
         else:
             openai.api_type = "openai"
-            # self.client = openai
-            self.client = OpenAI(api_key="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")
+            self.client = openai
 
 
     def wait_for_file_exclusivity(self, filename: str):
